@@ -1,0 +1,22 @@
+IMOS — MEDIA PROVENANCE
+
+New homepage hero video and brochure cover image:
+Title: B-Roll - Port of Savannah, Cargo Operations
+Creator: Jerry Glaser, U.S. Customs and Border Protection
+Recorded: June 28, 2023
+Source: https://www.dvidshub.net/video/891556/b-roll-port-savannah-cargo-operations
+Source marks the work PUBLIC DOMAIN.
+Usage information: https://www.dvidshub.net/about/copyright
+Source file: https://d34w7g4gy10iej.cloudfront.net/video/2307/DOD_109788761/DOD_109788761.mp4
+Local derivative: 15-second silent excerpt starting at 04:07, resized to 1280 pixels wide; WebM and MP4 versions.
+Poster and brochure cover: still extracted from that excerpt.
+No agency endorsement or IMOS ownership/operation of the depicted port is implied.
+
+IMOS logo:
+Extracted and cropped from the original IMOS website at the user's request.
+Source: https://imos-energy-infrastructure.vercel.app/assets/img/imos-logo.jpg
+The company logo is not claimed to be public domain.
+
+Other existing website media:
+Retained from the user's original IMOS website/repository.
+Their presence in a public repository does not establish public-domain status.
