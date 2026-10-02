@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Kicker, Shell } from "@/components/site/chrome";
+import { Kicker, PillButton, Shell } from "@/components/site/chrome";
 import { interests, isInterest, lifts, type InterestId } from "@/lib/imos";
 
 type Search = { interest: InterestId | "" };
@@ -102,43 +102,41 @@ function ContactPage() {
 
   return (
     <Shell>
-      <section className="bg-navy pt-28 text-paper">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 lg:grid-cols-12 lg:py-24">
+      <section className="px-3 pt-24 md:px-6 md:pt-28">
+        <div className="mx-auto grid max-w-6xl gap-12 py-10 lg:grid-cols-12 lg:py-16">
           <div className="lg:col-span-5">
-            <Kicker tone="sand">Commercial desk</Kicker>
-            <h1 className="mt-4 font-serif text-5xl md:text-6xl">Start a conversation.</h1>
-            <p className="mt-6 text-sand">
+            <Kicker>Commercial desk</Kicker>
+            <h1 className="mt-4 text-display">Start a conversation.</h1>
+            <p className="mt-6 text-cream-dim">
               EN590 and fuel supply, infrastructure partnerships, and government or corporate introductions. Tell us who you are and what you need considered. Pricing is not published here.
             </p>
-            <dl className="mt-10 border-t border-paper/15 text-sm">
+            <dl className="mt-10 border-t border-line text-sm">
               {[
                 ["Lead product", "EN590 diesel, CIF"],
                 ["Lift frame", "50,000 – 500,000 MT"],
                 ["Also", "Jet fuel, diesel, renewables, infrastructure, relations"],
               ].map(([label, value]) => (
-                <div key={label} className="grid grid-cols-2 gap-4 border-b border-paper/15 py-4">
-                  <dt className="tracking-widest text-steel uppercase">{label}</dt>
+                <div key={label} className="grid grid-cols-2 gap-4 border-b border-line py-4">
+                  <dt className="tracking-widest text-mute uppercase">{label}</dt>
                   <dd>{value}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
-          <div className="bg-paper p-6 text-ink md:p-8 lg:col-span-7">
+          <div className="rounded-frame bg-void-2 p-6 md:p-10 lg:col-span-7">
             {reference ? (
               <div>
                 <Kicker>Inquiry brief</Kicker>
-                <h2 className="mt-3 font-serif text-4xl text-navy">Prepared for the desk.</h2>
-                <p className="mt-3 text-sm text-ink/80">
-                  Reference <span className="font-medium text-navy">{reference}</span>. Copy the brief and send it to your IMOS contact. This page does not transmit mail on its own.
+                <h2 className="mt-3 text-title">Prepared for the desk.</h2>
+                <p className="mt-3 text-sm text-cream-dim">
+                  Reference <span className="font-medium text-cream">{reference}</span>. Copy the brief and send it to your IMOS contact. This page does not transmit mail on its own.
                 </p>
-                <pre className="mt-6 max-h-80 overflow-auto border border-line bg-paper-2 p-4 font-sans text-sm leading-relaxed whitespace-pre-wrap text-navy">
+                <pre className="mt-6 max-h-80 overflow-auto rounded-nav border border-line bg-void p-4 font-sans text-sm leading-relaxed whitespace-pre-wrap text-cream">
                   {brief}
                 </pre>
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <button
-                    type="button"
-                    className="inline-flex min-h-12 items-center justify-center bg-copper px-6 text-sm tracking-widest text-paper uppercase hover:bg-copper-deep active:scale-[0.96]"
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <PillButton
                     onClick={async () => {
                       try {
                         await navigator.clipboard.writeText(brief);
@@ -149,10 +147,10 @@ function ContactPage() {
                     }}
                   >
                     {copied ? "Copied" : "Copy brief"}
-                  </button>
+                  </PillButton>
                   <button
                     type="button"
-                    className="inline-flex min-h-12 items-center justify-center border border-navy px-6 text-sm tracking-widest text-navy uppercase"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-line px-5 text-sm text-cream"
                     onClick={() => {
                       setReference("");
                       setFields(empty(search.interest));
@@ -166,7 +164,7 @@ function ContactPage() {
             ) : (
               <form onSubmit={onSubmit} noValidate>
                 <Kicker>Inquiry</Kicker>
-                <h2 className="mt-3 font-serif text-4xl text-navy">Tell us what to consider.</h2>
+                <h2 className="mt-3 text-title">Tell us what to consider.</h2>
                 <div className="mt-8 grid gap-6 sm:grid-cols-2">
                   <Field label="Name" error={errors.name}>
                     <input value={fields.name} onChange={(e) => set("name", e.target.value)} autoComplete="name" className={inputClass} />
@@ -213,23 +211,20 @@ function ContactPage() {
                     />
                   </Field>
                 </div>
-                <label className="mt-6 flex items-start gap-3 text-sm text-ink/80">
+                <label className="mt-6 flex items-start gap-3 text-sm text-cream-dim">
                   <input
                     type="checkbox"
                     checked={fields.qualified}
                     onChange={(e) => set("qualified", e.target.checked)}
-                    className="mt-1 size-4 accent-copper"
+                    className="mt-1 size-4 accent-cream"
                   />
                   <span>I represent a qualified commercial, industrial, or institutional counterparty.</span>
                 </label>
-                {errors.qualified ? <p className="mt-2 text-sm text-copper-deep">{errors.qualified}</p> : null}
-                <button
-                  type="submit"
-                  className="mt-8 inline-flex min-h-12 w-full items-center justify-center bg-copper text-sm tracking-widest text-paper uppercase hover:bg-copper-deep active:scale-[0.96] sm:w-auto sm:px-8"
-                >
-                  Prepare inquiry brief
-                </button>
-                <p className="mt-4 text-xs text-steel">
+                {errors.qualified ? <p className="mt-2 text-sm text-cream">{errors.qualified}</p> : null}
+                <div className="mt-8">
+                  <PillButton type="submit">Prepare inquiry brief</PillButton>
+                </div>
+                <p className="mt-4 text-xs text-mute">
                   The brief stays with you until you send it. Nothing on this page is an offer to sell product.
                 </p>
               </form>
@@ -242,7 +237,7 @@ function ContactPage() {
 }
 
 const inputClass =
-  "w-full border-b border-line bg-transparent py-3 text-navy outline-none transition-colors focus:border-copper";
+  "w-full border-b border-line bg-transparent py-3 text-cream outline-none transition-colors focus:border-cream";
 
 function Field({
   label,
@@ -257,9 +252,9 @@ function Field({
 }) {
   return (
     <label className={`block ${className ?? ""}`}>
-      <span className="text-xs tracking-widest text-steel uppercase">{label}</span>
+      <span className="text-xs tracking-widest text-mute uppercase">{label}</span>
       {children}
-      {error ? <span className="mt-2 block text-sm text-copper-deep">{error}</span> : null}
+      {error ? <span className="mt-2 block text-sm text-cream">{error}</span> : null}
     </label>
   );
 }

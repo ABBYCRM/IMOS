@@ -1,20 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #12181f;
-  --color-navy: #0b1622;
-  --color-navy-2: #122233;
-  --color-navy-3: #1a3348;
-  --color-paper: #f3efe6;
-  --color-paper-2: #e6e0d2;
-  --color-copper: #c4622d;
-  --color-copper-deep: #8c4318;
-  --color-sand: #cfc3ae;
-  --color-steel: #8b98a4;
-  --color-line: #d9d2c4;
+  --color-void: #070706;
+  --color-void-2: #121210;
+  --color-cream: #e1e0cc;
+  --color-cream-dim: #b9b8a4;
+  --color-mute: #8a8978;
+  --color-line: #2a2a26;
+  --color-ink: #12110e;
   --color-globe: #6eaf45;
-  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --tracking-display: -0.045em;
+  --leading-display: 0.92;
+  --radius-frame: 1.75rem;
+  --radius-nav: 1.5rem;
+  --text-mega: clamp(4.25rem, 18vw, 14.5rem);
+  --text-mega--line-height: 0.82;
+  --text-mega--letter-spacing: -0.07em;
+  --text-mega--font-weight: 600;
+  --text-display: clamp(2.6rem, 5.6vw, 5.25rem);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.045em;
+  --text-display--font-weight: 600;
+  --text-title: clamp(1.85rem, 3vw, 3rem);
+  --text-title--line-height: 1.05;
+  --text-title--letter-spacing: -0.035em;
+  --text-title--font-weight: 600;
   --aspect-portrait: 3 / 4;
   --aspect-frame: 4 / 3;
   --aspect-wide: 3 / 2;
@@ -23,14 +35,15 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    color-scheme: dark;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     margin: 0;
-    background: var(--color-paper);
-    color: var(--color-ink);
+    background: var(--color-void);
+    color: var(--color-cream);
     font-family: var(--font-sans);
     font-size: 1.0625rem;
     line-height: 1.55;
@@ -42,16 +55,16 @@
   }
 
   ::selection {
-    background: var(--color-copper);
-    color: var(--color-paper);
+    background: var(--color-cream);
+    color: var(--color-ink);
   }
 
   h1,
   h2,
   h3 {
-    font-family: var(--font-serif);
-    font-weight: 400;
-    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.04em;
     text-wrap: balance;
   }
 
@@ -60,37 +73,32 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-copper);
+    outline: 2px solid var(--color-cream);
     outline-offset: 3px;
   }
 }
 
 .wordmark {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.35rem;
-  letter-spacing: 0.2em;
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
   line-height: 1;
 }
 
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.pull-gap {
+  margin-right: 0.22em;
 }
 
-@keyframes ken {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.07);
-  }
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.42;
+  mix-blend-mode: overlay;
+}
+
+.mega-bleed {
+  margin-bottom: -0.16em;
 }
 
 @keyframes marquee {
@@ -102,31 +110,8 @@
   }
 }
 
-@keyframes rule {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
-
-.reveal {
-  animation: rise 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.ken {
-  animation: ken 24s ease-in-out alternate infinite;
-  transform-origin: center;
-}
-
 .marquee-track {
   animation: marquee 48s linear infinite;
-}
-
-.scroll-rule {
-  transform-origin: top;
-  animation: rule 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -134,12 +119,7 @@
     scroll-behavior: auto;
   }
 
-  .reveal,
-  .ken,
-  .marquee-track,
-  .scroll-rule {
+  .marquee-track {
     animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
   }
 }

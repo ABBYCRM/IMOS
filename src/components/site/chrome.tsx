@@ -1,25 +1,36 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import { useEffect, useId, useState } from "react";
-import { nav, ticker } from "@/lib/imos";
+import { TextReveal } from "@/components/ui/text-reveal";
+import { nav, ticker, type InterestId } from "@/lib/imos";
 
-export function Mark({ tone = "light" }: { tone?: "light" | "dark" }) {
-  const id = useId();
-  const ink = tone === "light" ? "text-paper" : "text-navy";
+const pillClass =
+  "group inline-flex min-h-11 items-center gap-3 self-start rounded-full bg-cream py-1 pr-1 pl-5 text-sm font-medium text-ink transition-all duration-200 hover:gap-4 active:scale-95";
+
+function ArrowDisc() {
   return (
-    <span className={`wordmark inline-flex items-center ${ink}`} aria-label="IMOS">
+    <span className="flex size-10 items-center justify-center rounded-full bg-void text-cream transition-transform duration-200 group-hover:scale-105">
+      <ArrowRight className="size-4" strokeWidth={1.75} />
+    </span>
+  );
+}
+
+export function Mark() {
+  const id = useId();
+  return (
+    <span className="wordmark inline-flex items-center text-cream" aria-label="IMOS">
       <span>IM</span>
-      <svg viewBox="0 0 36 36" className="mx-1 h-5 w-5" aria-hidden="true">
+      <svg viewBox="0 0 36 36" className="mx-1 h-4 w-4" aria-hidden="true">
         <defs>
           <clipPath id={id}>
             <circle cx="18" cy="18" r="15.2" />
           </clipPath>
         </defs>
         <g clipPath={`url(#${id})`}>
-          <rect width="36" height="36" fill="var(--color-navy-3)" />
+          <rect width="36" height="36" fill="var(--color-void-2)" />
           <rect y="18" width="36" height="18" fill="var(--color-globe)" />
-          <ellipse cx="18" cy="18" rx="6.5" ry="15" fill="none" stroke="var(--color-paper)" strokeWidth="0.8" opacity="0.75" />
-          <path d="M2 18h32" stroke="var(--color-copper)" strokeWidth="1.3" />
+          <ellipse cx="18" cy="18" rx="6.5" ry="15" fill="none" stroke="var(--color-cream)" strokeWidth="0.8" opacity="0.8" />
+          <path d="M2 18h32" stroke="var(--color-cream)" strokeWidth="1.2" />
         </g>
         <circle cx="18" cy="18" r="15.2" fill="none" stroke="currentColor" strokeWidth="1.1" />
       </svg>
@@ -30,18 +41,11 @@ export function Mark({ tone = "light" }: { tone?: "light" | "dark" }) {
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const [solid, setSolid] = useState(path !== "/");
   const [open, setOpen] = useState(false);
+  const links = nav.filter((item) => item.to !== "/");
 
   useEffect(() => {
     setOpen(false);
-  }, [path]);
-
-  useEffect(() => {
-    const onScroll = () => setSolid(path !== "/" || window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
   }, [path]);
 
   useEffect(() => {
@@ -52,32 +56,30 @@ export function Shell({ children }: { children: React.ReactNode }) {
   }, [open]);
 
   return (
-    <div className="min-h-dvh bg-paper text-ink">
+    <div className="min-h-dvh bg-void text-cream">
       <a
         href="#content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-paper focus:px-4 focus:py-2 focus:text-navy"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-cream focus:px-4 focus:py-2 focus:text-ink"
       >
         Skip to content
       </a>
-      <header
-        className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${
-          solid || open ? "bg-navy" : "bg-transparent"
-        }`}
-      >
-        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5 md:px-6">
-          <Link to="/" aria-label="IMOS home" className="relative z-50">
-            <Mark />
-          </Link>
-          <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
-            {nav.map((item) => {
-              const active = item.to === "/" ? path === "/" : path.startsWith(item.to);
+
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-40">
+        <div className="hidden justify-center md:flex">
+          <nav
+            className="pointer-events-auto flex items-center gap-8 rounded-b-nav bg-void px-8 py-4"
+            aria-label="Primary"
+          >
+            <Link to="/" aria-label="IMOS home">
+              <Mark />
+            </Link>
+            {links.map((item) => {
+              const active = path.startsWith(item.to);
               return (
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`text-sm tracking-wide text-paper/80 transition-colors hover:text-paper ${
-                    active ? "text-paper" : ""
-                  }`}
+                  className={`text-sm transition-colors ${active ? "text-cream" : "text-cream-dim hover:text-cream"}`}
                   aria-current={active ? "page" : undefined}
                 >
                   {item.label}
@@ -87,14 +89,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <Link
               to="/contact"
               search={{ interest: "" }}
-              className="inline-flex min-h-11 items-center bg-copper px-5 text-sm font-medium tracking-widest text-paper uppercase transition-colors duration-200 hover:bg-copper-deep active:scale-[0.96]"
+              className={`text-sm transition-colors ${path.startsWith("/contact") ? "text-cream" : "text-cream-dim hover:text-cream"}`}
             >
               Inquire
             </Link>
           </nav>
+        </div>
+
+        <div className="pointer-events-auto flex items-center justify-between px-3 pt-3 md:hidden">
+          <Link to="/" aria-label="IMOS home" className="rounded-full bg-void px-4 py-3">
+            <Mark />
+          </Link>
           <button
             type="button"
-            className="relative z-50 inline-flex size-11 items-center justify-center text-paper lg:hidden"
+            className="inline-flex size-11 items-center justify-center rounded-full bg-void text-cream"
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -106,20 +114,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </header>
 
       {open ? (
-        <div id="mobile-nav" className="fixed inset-0 z-30 flex flex-col bg-navy px-6 pt-24 text-paper lg:hidden">
+        <div id="mobile-nav" className="fixed inset-0 z-30 flex flex-col bg-void px-6 pt-24 md:hidden">
           <nav className="flex flex-col" aria-label="Mobile">
             {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="border-b border-paper/15 py-4 font-serif text-4xl"
-              >
+              <Link key={item.to} to={item.to} className="border-b border-line py-4 font-display text-display">
                 {item.label}
               </Link>
             ))}
-            <Link to="/contact" search={{ interest: "" }} className="mt-8 inline-flex min-h-12 items-center justify-center bg-copper text-sm tracking-widest uppercase">
-              Inquire
-            </Link>
+            <div className="mt-8">
+              <Pill to="/contact">Inquire</Pill>
+            </div>
           </nav>
         </div>
       ) : null}
@@ -134,12 +138,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
 function Ticker() {
   const row = [...ticker, ...ticker];
   return (
-    <div className="overflow-hidden border-y border-line bg-paper-2 text-navy">
+    <div className="overflow-hidden border-y border-line">
       <div className="marquee-track flex w-max gap-10 py-3">
         {row.map((item, i) => (
-          <span key={`${item}-${i}`} className="text-xs tracking-widest uppercase">
+          <span key={`${item}-${i}`} className="text-xs tracking-widest text-mute uppercase">
             {item}
-            <span className="ml-10 text-copper" aria-hidden="true">
+            <span className="ml-10 text-cream-dim" aria-hidden="true">
               /
             </span>
           </span>
@@ -152,76 +156,98 @@ function Ticker() {
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-navy text-paper">
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-12">
+    <footer className="bg-void">
+      <div className="mx-auto grid max-w-6xl gap-12 px-6 pt-20 md:grid-cols-12">
         <div className="md:col-span-5">
           <Mark />
-          <p className="mt-6 max-w-sm text-sm leading-relaxed text-sand">
+          <p className="mt-6 max-w-sm text-sm leading-relaxed text-cream-dim">
             Connecting energy. Building infrastructure. Creating opportunity.
-          </p>
-          <p className="mt-4 text-xs tracking-widest text-steel uppercase">
-            Energy / Infrastructure / Opportunity
           </p>
         </div>
         <div className="md:col-span-3">
-          <p className="text-xs tracking-widest text-steel uppercase">Company</p>
+          <p className="text-xs tracking-widest text-mute uppercase">Company</p>
           <div className="mt-4 flex flex-col gap-3 text-sm">
-            <Link to="/about" className="hover:text-sand">
+            <Link to="/about" className="text-cream-dim hover:text-cream">
               Our approach
             </Link>
-            <Link to="/relations" className="hover:text-sand">
+            <Link to="/relations" className="text-cream-dim hover:text-cream">
               Government and corporate relations
             </Link>
-            <Link to="/contact" search={{ interest: "" }} className="hover:text-sand">
+            <Link to="/contact" search={{ interest: "" }} className="text-cream-dim hover:text-cream">
               Contact
             </Link>
           </div>
         </div>
         <div className="md:col-span-4">
-          <p className="text-xs tracking-widest text-steel uppercase">Focus</p>
+          <p className="text-xs tracking-widest text-mute uppercase">Focus</p>
           <div className="mt-4 flex flex-col gap-3 text-sm">
-            <Link to="/energy" className="hover:text-sand">
+            <Link to="/energy" className="text-cream-dim hover:text-cream">
               Energy and fuel
             </Link>
-            <Link to="/infrastructure" className="hover:text-sand">
+            <Link to="/infrastructure" className="text-cream-dim hover:text-cream">
               Infrastructure
             </Link>
           </div>
         </div>
       </div>
-      <div className="mx-auto flex max-w-6xl flex-col gap-3 border-t border-paper/10 px-6 py-6 text-xs text-steel md:flex-row md:items-center md:justify-between">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 pt-12 text-xs text-mute md:flex-row md:items-center md:justify-between">
         <p>© {year} IMOS. All rights reserved.</p>
         <p className="max-w-xl md:text-right">
           Conversations are with qualified commercial, industrial, and institutional counterparties. Nothing on this site is an offer or a solicitation.
         </p>
       </div>
+      <div className="mega-bleed mt-10 overflow-hidden px-2">
+        <p className="text-center font-display text-mega text-cream select-none">IMOS</p>
+      </div>
     </footer>
   );
 }
 
-export function Kicker({ children, tone = "copper" }: { children: React.ReactNode; tone?: "copper" | "sand" }) {
+export function Kicker({ children }: { children: React.ReactNode }) {
+  return <p className="text-xs font-medium tracking-widest text-mute uppercase">{children}</p>;
+}
+
+type PillTo = "/energy" | "/infrastructure" | "/relations" | "/about" | "/contact";
+
+export function Pill({
+  to,
+  interest = "",
+  children,
+}: {
+  to: PillTo;
+  interest?: InterestId | "";
+  children: React.ReactNode;
+}) {
+  if (to === "/contact") {
+    return (
+      <Link to="/contact" search={{ interest }} className={pillClass}>
+        {children}
+        <ArrowDisc />
+      </Link>
+    );
+  }
   return (
-    <p className={`text-xs font-medium tracking-widest uppercase ${tone === "sand" ? "text-sand" : "text-copper"}`}>
+    <Link to={to} className={pillClass}>
       {children}
-    </p>
+      <ArrowDisc />
+    </Link>
   );
 }
 
-export function TextLink({
-  to,
+export function PillButton({
   children,
-  tone = "copper",
+  type = "button",
+  onClick,
 }: {
-  to: string;
   children: React.ReactNode;
-  tone?: "copper" | "paper" | "navy";
+  type?: "button" | "submit";
+  onClick?: () => void;
 }) {
-  const color =
-    tone === "paper" ? "text-paper border-paper/40 hover:border-paper" : tone === "navy" ? "text-navy border-navy/30 hover:border-navy" : "text-copper border-copper/40 hover:border-copper";
   return (
-    <Link to={to} className={`inline-flex min-h-11 items-center border-b text-sm tracking-widest uppercase ${color}`}>
+    <button type={type} onClick={onClick} className={pillClass}>
       {children}
-    </Link>
+      <ArrowDisc />
+    </button>
   );
 }
 
@@ -242,7 +268,7 @@ export function VideoCover({
 }
 
 export function Still({ src, alt, className }: { src: string; alt: string; className?: string }) {
-  return <img src={src} alt={alt} className={`ken h-full w-full object-cover ${className ?? ""}`} />;
+  return <img src={src} alt={alt} className={`h-full w-full object-cover ${className ?? ""}`} />;
 }
 
 export function PageHero({
@@ -261,57 +287,45 @@ export function PageHero({
   poster?: string;
 }) {
   return (
-    <header className="relative flex min-h-[78vh] items-end overflow-hidden bg-navy">
-      {video ? (
-        <VideoCover src={video} poster={poster ?? image} className="absolute inset-0 h-full w-full object-cover" />
-      ) : (
-        <Still src={image} alt={alt} className="absolute inset-0" />
-      )}
-      <div className="absolute inset-0 bg-linear-to-t from-navy via-navy/50 to-navy/20" />
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-32 pb-16">
-        <Kicker tone="sand">{kicker}</Kicker>
-        <h1 className="mt-4 max-w-4xl font-serif text-5xl text-paper md:text-7xl">{title}</h1>
-      </div>
-    </header>
-  );
-}
-
-export function CtaBand({ title, to, label }: { title: string; to: string; label: string }) {
-  return (
-    <section className="bg-navy-2 text-paper">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-20 md:flex-row md:items-end md:justify-between">
-        <h2 className="max-w-3xl font-serif text-4xl md:text-5xl">{title}</h2>
-        <Link
-          to={to}
-          className="inline-flex min-h-12 shrink-0 items-center justify-center border border-paper/50 px-6 text-sm tracking-widest uppercase transition-colors hover:bg-paper hover:text-navy"
-        >
-          {label}
-        </Link>
-      </div>
+    <section className="p-2 md:p-3">
+      <header className="relative flex min-h-dvh items-end overflow-hidden rounded-frame bg-void-2">
+        {video ? (
+          <VideoCover src={video} poster={poster ?? image} className="absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <Still src={image} alt={alt} className="absolute inset-0" />
+        )}
+        <div className="noise-overlay pointer-events-none absolute inset-0" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-void via-void/45 to-void/25" />
+        <div className="relative z-10 w-full px-5 pt-28 pb-10 md:px-10 md:pb-14">
+          <Kicker>{kicker}</Kicker>
+          <h1 className="mt-4 max-w-5xl text-display text-cream">
+            <TextReveal text={title} startOnView={false} className="text-cream" />
+          </h1>
+        </div>
+      </header>
     </section>
   );
 }
 
-export function IndexList({
-  items,
-  tone = "paper",
-}: {
-  items: readonly { title: string; body: string }[];
-  tone?: "paper" | "navy";
-}) {
-  const dark = tone === "navy";
+export function CtaBand({ title, label, interest = "" }: { title: string; label: string; interest?: InterestId | "" }) {
+  return (
+    <section className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-24 md:flex-row md:items-end md:justify-between">
+      <h2 className="max-w-3xl text-display">{title}</h2>
+      <Pill to="/contact" interest={interest}>
+        {label}
+      </Pill>
+    </section>
+  );
+}
+
+export function IndexList({ items }: { items: readonly { title: string; body: string }[] }) {
   return (
     <div>
       {items.map((item, i) => (
-        <article
-          key={item.title}
-          className={`grid gap-3 border-t py-8 md:grid-cols-12 md:gap-8 ${dark ? "border-paper/15" : "border-line"}`}
-        >
-          <p className={`text-sm tracking-widest md:col-span-2 ${dark ? "text-sand" : "text-copper"}`}>
-            {String(i + 1).padStart(2, "0")}
-          </p>
-          <h3 className={`font-serif text-3xl md:col-span-4 ${dark ? "text-paper" : "text-navy"}`}>{item.title}</h3>
-          <p className={`md:col-span-6 ${dark ? "text-sand" : "text-ink/80"}`}>{item.body}</p>
+        <article key={item.title} className="grid gap-3 border-t border-line py-8 md:grid-cols-12 md:gap-8">
+          <p className="text-sm tracking-widest text-mute md:col-span-2">{String(i + 1).padStart(2, "0")}</p>
+          <h3 className="text-title md:col-span-4">{item.title}</h3>
+          <p className="text-cream-dim md:col-span-6">{item.body}</p>
         </article>
       ))}
     </div>

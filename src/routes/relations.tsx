@@ -32,47 +32,44 @@ function RelationsPage() {
         alt="Assembly chamber in quiet daylight"
       />
 
-      <section className="mx-auto max-w-3xl px-6 py-24">
-        <p className="font-serif text-2xl leading-snug text-navy md:text-3xl">
-          Successful projects often depend on more than capital and resources.
-        </p>
-        <p className="mt-6 text-ink/80">
+      <section className="mx-auto max-w-3xl px-4 py-24 lg:px-6">
+        <p className="text-title leading-snug">Successful projects often depend on more than capital and resources.</p>
+        <p className="mt-6 text-cream-dim">
           They require strong relationships, effective communication, strategic coordination, and an understanding of the environments in which organizations operate.
         </p>
-        <p className="mt-4 text-ink/80">
+        <p className="mt-4 text-cream-dim">
           IMOS works to develop and facilitate relationships among corporations, government stakeholders, institutional partners, investors, contractors, and other qualified organizations.
         </p>
       </section>
 
-      <section className="bg-navy text-paper">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-24 lg:grid-cols-2">
-          <div className="relative aspect-wide overflow-hidden">
-            <Still src="/media/chamber.jpg" alt="Institutional chamber" className="absolute inset-0" />
-          </div>
-          <div>
-            <Kicker tone="sand">Our approach</Kicker>
-            <h2 className="mt-4 font-serif text-4xl md:text-5xl">Professionalism. Transparency. Strategic communication.</h2>
-            <p className="mt-6 text-sand">
-              We help organizations identify opportunities, establish productive partnerships, and navigate complex commercial and institutional environments. The work is relationship development — conducted in the open, with the people who are actually accountable.
-            </p>
-          </div>
+      <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-8 lg:grid-cols-2 lg:px-6">
+        <div className="relative aspect-wide overflow-hidden rounded-frame">
+          <Still src="/media/chamber.jpg" alt="Institutional chamber" className="absolute inset-0" />
+          <div className="noise-overlay pointer-events-none absolute inset-0" />
+        </div>
+        <div>
+          <Kicker>Approach</Kicker>
+          <h2 className="mt-4 text-display">Professionalism. Transparency. Strategic communication.</h2>
+          <p className="mt-6 text-cream-dim">
+            We help organizations identify opportunities, establish productive partnerships, and navigate complex commercial and institutional environments. The work is relationship development — conducted in the open, with the people who are actually accountable.
+          </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-24">
+      <section className="mx-auto max-w-6xl px-4 py-24 lg:px-6">
         <Kicker>How a relationship moves</Kicker>
-        <div className="mt-10 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-10 border-t border-line pt-10 md:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, i) => (
             <article key={step.title}>
-              <p className="text-xs tracking-widest text-copper">{String(i + 1).padStart(2, "0")}</p>
-              <h3 className="mt-4 font-serif text-3xl text-navy">{step.title}</h3>
-              <p className="mt-3 text-sm text-ink/80">{step.body}</p>
+              <p className="text-xs tracking-widest text-mute">{String(i + 1).padStart(2, "0")}</p>
+              <h3 className="mt-4 text-title">{step.title}</h3>
+              <p className="mt-3 text-sm text-cream-dim">{step.body}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <CtaBand title="Looking to establish a strategic partnership with IMOS?" to="/contact" label="Contact IMOS" />
+      <CtaBand title="Looking to establish a strategic partnership with IMOS?" label="Contact IMOS" interest="relations" />
     </Shell>
   );
 }

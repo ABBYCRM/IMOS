@@ -16,45 +16,38 @@ function InfrastructurePage() {
         poster="/media/highway.jpg"
       />
 
-      <section className="mx-auto max-w-3xl px-6 py-24">
-        <p className="font-serif text-2xl leading-snug text-navy md:text-3xl">
-          Strong infrastructure is the foundation of a strong economy.
-        </p>
-        <p className="mt-6 text-ink/80">
+      <section className="mx-auto max-w-3xl px-4 py-24 lg:px-6">
+        <p className="text-title leading-snug">Strong infrastructure is the foundation of a strong economy.</p>
+        <p className="mt-6 text-cream-dim">
           IMOS is involved in infrastructure opportunities including bridge and highway construction, transportation infrastructure, and large-scale development projects. We seek to collaborate with qualified contractors, engineering firms, developers, government entities, and strategic partners to support projects that improve transportation, connectivity, safety, and economic development.
         </p>
       </section>
 
-      <section className="grid lg:grid-cols-2">
-        <div className="relative min-h-screen overflow-hidden bg-navy">
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-3 lg:grid-cols-2 lg:px-6">
+        <div className="relative min-h-dvh overflow-hidden rounded-frame bg-void-2">
           <Still src="/media/highway.jpg" alt="Aerial of a highway interchange and bridge" className="absolute inset-0" />
+          <div className="noise-overlay pointer-events-none absolute inset-0" />
         </div>
-        <div className="flex flex-col justify-center px-6 py-20 lg:px-16">
-          <Kicker>Our infrastructure focus</Kicker>
-          <h2 className="mt-4 font-serif text-4xl text-navy md:text-5xl">Lasting performance. Community benefit.</h2>
-          <p className="mt-6 text-ink/80">
+        <div className="px-3 py-12 lg:px-10">
+          <Kicker>Infrastructure focus</Kicker>
+          <h2 className="mt-4 text-display">Lasting performance. Community benefit.</h2>
+          <p className="mt-6 text-cream-dim">
             The goal is to support infrastructure projects designed for lasting performance, economic impact, and community benefit — not one-off construction for its own sake.
           </p>
         </div>
       </section>
 
-      <section className="bg-navy py-24 text-paper">
-        <div className="mx-auto max-w-6xl px-6">
-          <Kicker tone="sand">Infrastructure portfolio</Kicker>
-          <h2 className="mt-4 max-w-3xl font-serif text-4xl md:text-5xl">
-            Areas of interest across transportation and development.
-          </h2>
+      <section className="bg-void-2 py-24">
+        <div className="mx-auto max-w-6xl px-4 lg:px-6">
+          <Kicker>Portfolio</Kicker>
+          <h2 className="mt-4 max-w-3xl text-display">Areas of interest across transportation and development.</h2>
           <div className="mt-12">
-            <IndexList items={infraLines} tone="navy" />
+            <IndexList items={infraLines} />
           </div>
         </div>
       </section>
 
-      <CtaBand
-        title="Have an infrastructure project or partnership to discuss?"
-        to="/contact"
-        label="Contact IMOS"
-      />
+      <CtaBand title="Have an infrastructure project or partnership to discuss?" label="Contact IMOS" interest="infrastructure" />
     </Shell>
   );
 }
