@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { CtaBand, Kicker, Pill, Shell, Still, VideoCover } from "@/components/site/chrome";
-import { WordsPullUp } from "@/components/ui/words-pull-up";
 import { TextReveal } from "@/components/ui/text-reveal";
 import { pillars, principles } from "@/lib/imos";
 
@@ -35,41 +35,46 @@ function Home() {
   const reduce = useReducedMotion();
   return (
     <Shell>
-      <section className="h-dvh p-2 md:p-3">
-        <div className="relative h-full overflow-hidden rounded-frame bg-void-2">
-          <VideoCover
-            src="/media/hero.mp4"
-            poster="/media/terminal.jpg"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="noise-overlay pointer-events-none absolute inset-0" />
-          <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-void/40 via-transparent to-void/75" />
-          <div className="absolute inset-x-0 bottom-0 px-4 pb-4 md:px-8 md:pb-6">
-            <div className="grid items-end gap-6 lg:grid-cols-12">
-              <h1 className="text-mega text-cream lg:col-span-8">
-                <WordsPullUp text="IMOS" />
-              </h1>
-              <div className="flex flex-col gap-5 pb-2 lg:col-span-4 lg:pb-6">
-                <motion.p
-                  initial={reduce ? false : { y: 16, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: reduce ? 0 : 0.8, delay: reduce ? 0 : 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="max-w-sm text-sm leading-snug text-cream-dim md:text-base"
-                >
-                  Powering progress. Building connections. Advancing the future. EN590 diesel, CIF, for qualified commercial and industrial counterparties.
-                </motion.p>
-                <motion.div
-                  initial={reduce ? false : { y: 16, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: reduce ? 0 : 0.8, delay: reduce ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <Pill to="/contact" interest="en590">
-                    Discuss EN590
-                  </Pill>
-                </motion.div>
-              </div>
-            </div>
-          </div>
+      <section className="relative h-dvh overflow-hidden bg-void">
+        <VideoCover
+          src="/media/hero.mp4"
+          poster="/media/terminal.jpg"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="noise-overlay pointer-events-none absolute inset-0" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-void via-void/20 to-void/45" />
+        <div className="relative z-10 flex h-full flex-col justify-end px-5 pt-28 pb-10 md:px-10 md:pb-14">
+          <h1>
+            <img
+              src="/media/imos-logo.png"
+              alt="IMOS. Energy, infrastructure, opportunity."
+              className="h-24 w-auto max-w-full md:h-36"
+            />
+          </h1>
+          <motion.p
+            initial={reduce ? false : { y: 16, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: reduce ? 0 : 0.8, delay: reduce ? 0 : 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 max-w-xl text-base text-cream md:text-lg"
+          >
+            Powering progress. Building connections. Advancing the future. EN590 diesel on a CIF basis, for qualified commercial and industrial counterparties.
+          </motion.p>
+          <motion.div
+            initial={reduce ? false : { y: 16, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: reduce ? 0 : 0.8, delay: reduce ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
+          >
+            <Pill to="/contact" interest="en590">
+              Discuss EN590
+            </Pill>
+            <Link
+              to="/infrastructure"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-cream/30 px-5 text-sm font-medium tracking-widest text-cream uppercase"
+            >
+              Infrastructure
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -80,7 +85,7 @@ function Home() {
             to={item.href}
             className="group border-b border-line px-6 py-8 last:border-b-0 md:border-r md:border-b-0 md:last:border-r-0"
           >
-            <p className="text-xs tracking-widest text-mute">{item.index}</p>
+            <p className="text-xs tracking-widest text-ocean">{item.index}</p>
             <p className="mt-8 text-xs tracking-widest text-cream-dim uppercase">{item.kicker}</p>
             <p className="mt-2 text-2xl group-hover:text-cream-dim">{item.title}</p>
           </Link>
@@ -100,18 +105,20 @@ function Home() {
           <p className="mt-6 max-w-xl text-cream-dim">
             IMOS operates within the global energy marketplace, supporting the sourcing, supply, and strategic movement of EN590 diesel for qualified commercial and industrial customers — backed by dependable supply relationships, regulatory awareness, and long-term partnerships.
           </p>
-          <dl className="mt-8 border-t border-line">
-            {[
-              ["Basis", "CIF"],
-              ["Lift", "50,000 – 500,000 MT"],
-              ["Counterparties", "Qualified commercial and industrial"],
-            ].map(([label, value]) => (
-              <div key={label} className="grid grid-cols-2 gap-4 border-b border-line py-4 text-sm">
-                <dt className="tracking-widest text-mute uppercase">{label}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-          </dl>
+          <BorderBeam className="mt-8 rounded-frame" color="var(--color-ocean)" speed={8}>
+            <dl className="rounded-frame border border-line bg-void-2/90 px-5">
+              {[
+                ["Basis", "CIF"],
+                ["Lift", "50,000 – 500,000 MT"],
+                ["Counterparties", "Qualified commercial and industrial"],
+              ].map(([label, value]) => (
+                <div key={label} className="grid grid-cols-2 gap-4 border-b border-line py-4 text-sm last:border-b-0">
+                  <dt className="tracking-widest text-mute uppercase">{label}</dt>
+                  <dd className="text-cream">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </BorderBeam>
           <div className="mt-8">
             <Pill to="/contact" interest="en590">
               Request EN590 supply
@@ -126,7 +133,16 @@ function Home() {
           <h2 className="mt-4 max-w-xl text-title">Energy, infrastructure, and the relationships that move both.</h2>
           <div className="mt-8 grid gap-3 md:grid-cols-3">
             {films.map((film) => (
-              <Link key={film.title} to={film.href} className="group relative block aspect-portrait overflow-hidden rounded-frame bg-void-2 md:aspect-frame">
+              <Link
+                key={film.title}
+                to={film.href}
+                className="spot group relative block aspect-portrait overflow-hidden rounded-frame bg-void-2 md:aspect-frame"
+                onMouseMove={(event) => {
+                  const box = event.currentTarget.getBoundingClientRect();
+                  event.currentTarget.style.setProperty("--sx", `${event.clientX - box.left}px`);
+                  event.currentTarget.style.setProperty("--sy", `${event.clientY - box.top}px`);
+                }}
+              >
                 {film.video ? (
                   <VideoCover src={film.video} poster={film.poster} className="absolute inset-0 h-full w-full object-cover" />
                 ) : (
@@ -134,7 +150,7 @@ function Home() {
                 )}
                 <div className="noise-overlay pointer-events-none absolute inset-0" />
                 <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-void via-void/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5">
+                <div className="absolute inset-x-0 bottom-0 z-10 p-5">
                   <p className="text-xs tracking-widest text-cream-dim uppercase">{film.kicker}</p>
                   <p className="mt-2 text-2xl">{film.title}</p>
                 </div>

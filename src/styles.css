@@ -1,35 +1,41 @@
 @import "tailwindcss";
 
+@property --border-beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
 @theme {
-  --color-void: #070706;
-  --color-void-2: #121210;
-  --color-cream: #e1e0cc;
-  --color-cream-dim: #b9b8a4;
-  --color-mute: #8a8978;
-  --color-line: #2a2a26;
-  --color-ink: #12110e;
-  --color-globe: #6eaf45;
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
-  --tracking-display: -0.045em;
-  --leading-display: 0.92;
-  --radius-frame: 1.75rem;
+  --color-void: #010e22;
+  --color-void-2: #07182f;
+  --color-cream: #f3f6f8;
+  --color-cream-dim: #c5d0dc;
+  --color-mute: #8ea3b8;
+  --color-line: #1a3d62;
+  --color-ink: #010e22;
+  --color-paper: #f7fafc;
+  --color-ocean: #2f9fe0;
+  --color-land: #8fbe3c;
+  --color-globe: #1f7ec4;
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
+  --tracking-display: -0.02em;
+  --leading-display: 0.95;
+  --radius-frame: 1.25rem;
   --radius-nav: 1.5rem;
-  --text-mega: clamp(4.25rem, 18vw, 14.5rem);
-  --text-mega--line-height: 0.82;
-  --text-mega--letter-spacing: -0.07em;
-  --text-mega--font-weight: 600;
-  --text-display: clamp(2.6rem, 5.6vw, 5.25rem);
+  --text-display: clamp(2.7rem, 6vw, 5.4rem);
   --text-display--line-height: 0.92;
-  --text-display--letter-spacing: -0.045em;
+  --text-display--letter-spacing: -0.02em;
   --text-display--font-weight: 600;
-  --text-title: clamp(1.85rem, 3vw, 3rem);
-  --text-title--line-height: 1.05;
-  --text-title--letter-spacing: -0.035em;
+  --text-title: clamp(1.8rem, 3vw, 2.8rem);
+  --text-title--line-height: 1.02;
+  --text-title--letter-spacing: -0.015em;
   --text-title--font-weight: 600;
   --aspect-portrait: 3 / 4;
   --aspect-frame: 4 / 3;
   --aspect-wide: 3 / 2;
+  --animate-border-beam: border-beam var(--border-beam-duration, 7s) linear infinite;
 }
 
 @layer base {
@@ -55,8 +61,8 @@
   }
 
   ::selection {
-    background: var(--color-cream);
-    color: var(--color-ink);
+    background: var(--color-ocean);
+    color: var(--color-paper);
   }
 
   h1,
@@ -64,8 +70,9 @@
   h3 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     text-wrap: balance;
+    text-transform: uppercase;
   }
 
   p {
@@ -73,32 +80,58 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-cream);
+    outline: 2px solid var(--color-ocean);
     outline-offset: 3px;
   }
 }
 
-.wordmark {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.22em;
-  line-height: 1;
-}
-
-.pull-gap {
-  margin-right: 0.22em;
-}
-
 .noise-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
-  opacity: 0.42;
+  opacity: 0.18;
   mix-blend-mode: overlay;
 }
 
-.mega-bleed {
-  margin-bottom: -0.16em;
+.border-beam-ring {
+  padding: 1.5px;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: border-beam var(--border-beam-duration, 7s) linear infinite;
+}
+
+.spot {
+  position: relative;
+}
+
+.spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    420px circle at var(--sx, 50%) var(--sy, 30%),
+    color-mix(in srgb, var(--color-ocean) 42%, transparent),
+    transparent 46%
+  );
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.spot:hover::before {
+  opacity: 1;
+}
+
+@keyframes border-beam {
+  to {
+    --border-beam-angle: 360deg;
+  }
 }
 
 @keyframes marquee {
@@ -111,7 +144,7 @@
 }
 
 .marquee-track {
-  animation: marquee 48s linear infinite;
+  animation: marquee 42s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -119,7 +152,12 @@
     scroll-behavior: auto;
   }
 
-  .marquee-track {
+  .marquee-track,
+  .border-beam-ring {
     animation: none !important;
+  }
+
+  .spot::before {
+    display: none;
   }
 }

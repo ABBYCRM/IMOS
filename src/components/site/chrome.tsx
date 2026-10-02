@@ -1,42 +1,22 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight, Menu, X } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import { TextReveal } from "@/components/ui/text-reveal";
 import { nav, ticker, type InterestId } from "@/lib/imos";
 
 const pillClass =
-  "group inline-flex min-h-11 items-center gap-3 self-start rounded-full bg-cream py-1 pr-1 pl-5 text-sm font-medium text-ink transition-all duration-200 hover:gap-4 active:scale-95";
+  "group inline-flex min-h-11 items-center gap-3 self-start rounded-full bg-ocean py-1 pr-1 pl-5 text-sm font-medium tracking-wide text-paper uppercase transition-all duration-200 hover:gap-4 active:scale-95";
 
 function ArrowDisc() {
   return (
-    <span className="flex size-10 items-center justify-center rounded-full bg-void text-cream transition-transform duration-200 group-hover:scale-105">
+    <span className="flex size-10 items-center justify-center rounded-full bg-void text-paper transition-transform duration-200 group-hover:scale-105">
       <ArrowRight className="size-4" strokeWidth={1.75} />
     </span>
   );
 }
 
-export function Mark() {
-  const id = useId();
-  return (
-    <span className="wordmark inline-flex items-center text-cream" aria-label="IMOS">
-      <span>IM</span>
-      <svg viewBox="0 0 36 36" className="mx-1 h-4 w-4" aria-hidden="true">
-        <defs>
-          <clipPath id={id}>
-            <circle cx="18" cy="18" r="15.2" />
-          </clipPath>
-        </defs>
-        <g clipPath={`url(#${id})`}>
-          <rect width="36" height="36" fill="var(--color-void-2)" />
-          <rect y="18" width="36" height="18" fill="var(--color-globe)" />
-          <ellipse cx="18" cy="18" rx="6.5" ry="15" fill="none" stroke="var(--color-cream)" strokeWidth="0.8" opacity="0.8" />
-          <path d="M2 18h32" stroke="var(--color-cream)" strokeWidth="1.2" />
-        </g>
-        <circle cx="18" cy="18" r="15.2" fill="none" stroke="currentColor" strokeWidth="1.1" />
-      </svg>
-      <span>S</span>
-    </span>
-  );
+export function Mark({ className = "h-12 md:h-14" }: { className?: string }) {
+  return <img src="/media/imos-logo.png" alt="IMOS" className={`w-auto ${className}`} />;
 }
 
 export function Shell({ children }: { children: React.ReactNode }) {
@@ -64,22 +44,19 @@ export function Shell({ children }: { children: React.ReactNode }) {
         Skip to content
       </a>
 
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-40">
-        <div className="hidden justify-center md:flex">
-          <nav
-            className="pointer-events-auto flex items-center gap-8 rounded-b-nav bg-void px-8 py-4"
-            aria-label="Primary"
-          >
-            <Link to="/" aria-label="IMOS home">
-              <Mark />
-            </Link>
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-void/85 backdrop-blur-md">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 md:px-6">
+          <Link to="/" aria-label="IMOS home" className="shrink-0">
+            <Mark className="h-11 md:h-14" />
+          </Link>
+          <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
             {links.map((item) => {
               const active = path.startsWith(item.to);
               return (
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`text-sm transition-colors ${active ? "text-cream" : "text-cream-dim hover:text-cream"}`}
+                  className={`text-sm font-medium tracking-widest uppercase transition-colors ${active ? "text-cream" : "text-cream-dim hover:text-cream"}`}
                   aria-current={active ? "page" : undefined}
                 >
                   {item.label}
@@ -89,20 +66,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <Link
               to="/contact"
               search={{ interest: "" }}
-              className={`text-sm transition-colors ${path.startsWith("/contact") ? "text-cream" : "text-cream-dim hover:text-cream"}`}
+              className="inline-flex min-h-11 items-center rounded-full bg-ocean px-5 text-sm font-medium tracking-widest text-paper uppercase"
             >
               Inquire
             </Link>
           </nav>
-        </div>
-
-        <div className="pointer-events-auto flex items-center justify-between px-3 pt-3 md:hidden">
-          <Link to="/" aria-label="IMOS home" className="rounded-full bg-void px-4 py-3">
-            <Mark />
-          </Link>
           <button
             type="button"
-            className="inline-flex size-11 items-center justify-center rounded-full bg-void text-cream"
+            className="inline-flex size-11 items-center justify-center text-cream lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -114,7 +85,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </header>
 
       {open ? (
-        <div id="mobile-nav" className="fixed inset-0 z-30 flex flex-col bg-void px-6 pt-24 md:hidden">
+        <div id="mobile-nav" className="fixed inset-0 z-30 flex flex-col bg-void px-6 pt-28 lg:hidden">
           <nav className="flex flex-col" aria-label="Mobile">
             {nav.map((item) => (
               <Link key={item.to} to={item.to} className="border-b border-line py-4 font-display text-display">
@@ -143,7 +114,7 @@ function Ticker() {
         {row.map((item, i) => (
           <span key={`${item}-${i}`} className="text-xs tracking-widest text-mute uppercase">
             {item}
-            <span className="ml-10 text-cream-dim" aria-hidden="true">
+            <span className="ml-10 text-land" aria-hidden="true">
               /
             </span>
           </span>
@@ -159,7 +130,7 @@ function Footer() {
     <footer className="bg-void">
       <div className="mx-auto grid max-w-6xl gap-12 px-6 pt-20 md:grid-cols-12">
         <div className="md:col-span-5">
-          <Mark />
+          <Mark className="h-16 md:h-20" />
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-cream-dim">
             Connecting energy. Building infrastructure. Creating opportunity.
           </p>
@@ -195,9 +166,6 @@ function Footer() {
         <p className="max-w-xl md:text-right">
           Conversations are with qualified commercial, industrial, and institutional counterparties. Nothing on this site is an offer or a solicitation.
         </p>
-      </div>
-      <div className="mega-bleed mt-10 overflow-hidden px-2">
-        <p className="text-center font-display text-mega text-cream select-none">IMOS</p>
       </div>
     </footer>
   );
@@ -287,15 +255,15 @@ export function PageHero({
   poster?: string;
 }) {
   return (
-    <section className="p-2 md:p-3">
-      <header className="relative flex min-h-dvh items-end overflow-hidden rounded-frame bg-void-2">
+    <section>
+      <header className="relative flex min-h-dvh items-end overflow-hidden bg-void-2">
         {video ? (
           <VideoCover src={video} poster={poster ?? image} className="absolute inset-0 h-full w-full object-cover" />
         ) : (
           <Still src={image} alt={alt} className="absolute inset-0" />
         )}
         <div className="noise-overlay pointer-events-none absolute inset-0" />
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-void via-void/45 to-void/25" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-void via-void/35 to-void/20" />
         <div className="relative z-10 w-full px-5 pt-28 pb-10 md:px-10 md:pb-14">
           <Kicker>{kicker}</Kicker>
           <h1 className="mt-4 max-w-5xl text-display text-cream">
