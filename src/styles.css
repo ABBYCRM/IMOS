@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #12181f;
+  --color-navy: #0b1622;
+  --color-navy-2: #122233;
+  --color-navy-3: #1a3348;
+  --color-paper: #f3efe6;
+  --color-paper-2: #e6e0d2;
+  --color-copper: #c4622d;
+  --color-copper-deep: #8c4318;
+  --color-sand: #cfc3ae;
+  --color-steel: #8b98a4;
+  --color-line: #d9d2c4;
+  --color-globe: #6eaf45;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --aspect-portrait: 3 / 4;
+  --aspect-frame: 4 / 3;
+  --aspect-wide: 3 / 2;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: var(--color-copper);
+    color: var(--color-paper);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-copper);
+    outline-offset: 3px;
+  }
+}
+
+.wordmark {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.35rem;
+  letter-spacing: 0.2em;
+  line-height: 1;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ken {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.07);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes rule {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.reveal {
+  animation: rise 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.ken {
+  animation: ken 24s ease-in-out alternate infinite;
+  transform-origin: center;
+}
+
+.marquee-track {
+  animation: marquee 48s linear infinite;
+}
+
+.scroll-rule {
+  transform-origin: top;
+  animation: rule 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .ken,
+  .marquee-track,
+  .scroll-rule {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
