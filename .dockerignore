@@ -1,13 +1,9 @@
 node_modules
-.vercel
-.output
-.nitro
-dist
+.git
 .grok
 artifacts
 screenshots
 attachments
+.vercel
+.output
 *.log
-.DS_Store
-.env
-.env.*
