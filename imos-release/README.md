@@ -22,10 +22,38 @@ No workspace secrets, API keys, restricted source documents, or databases are in
    deployment immediately.
 6. Once active, check `/`, `/energy`, `/contact`, video playback, and the PDF link.
 
-This branch is staged only. The main branch and DigitalOcean app settings
-have not been changed. To restore the previous version, select `main` again.
-Do not merge this release into main unless you also intend to update other
-hosts that track main, including the existing Vercel deployment.
+This release is merged into `main`, which the DigitalOcean `imos` app deploys
+on push. Other hosts that track `main` (the older Vercel project) are not
+configured for this release.
+
+## SEO and AI search
+
+`server.mjs` pre-renders one HTML document per route with the head tags from
+`site.mjs` and `seo.mjs`: unique title and description, canonical URL, Open
+Graph and Twitter tags, favicons, and JSON-LD (`Organization`, `WebSite`, and a
+`WebPage`/`AboutPage`/`ContactPage` with a `BreadcrumbList`). It also serves
+`/robots.txt`, `/sitemap.xml`, `/llms.txt` and `/llms-full.txt` (from
+`llms-full.md`). Unknown routes return HTTP 404; `/index.html`, `/<page>.html`
+and trailing-slash URLs redirect (301) to the canonical path.
+
+When adding a page to the SPA, add it to `pages` in `site.mjs` so it is
+pre-rendered and listed in the sitemap, and add its text to `llms-full.md`.
+
+Environment variables (both optional, runtime):
+
+| Variable | Purpose |
+| --- | --- |
+| `SITE_URL` | Origin used for canonical, sitemap, Open Graph and llms.txt URLs. Defaults to `https://imos-2mi89.ondigitalocean.app`. Set it to the custom domain once one is attached. |
+| `GOOGLE_SITE_VERIFICATION` | Google Search Console HTML-tag token (the `content` value only). When set, `<meta name="google-site-verification">` is added to every page. |
+
+Google Search Console: add a URL-prefix property for the `SITE_URL` origin,
+choose the HTML tag method, put the token in `GOOGLE_SITE_VERIFICATION` on the
+`web` component, redeploy, then click Verify and submit `/sitemap.xml`.
+A Domain property instead needs a DNS TXT record
+(`google-site-verification=...`) at the domain's DNS host; that requires a
+custom domain, because `ondigitalocean.app` DNS cannot be edited.
+
+Run `node --test imos-release/seo.test.mjs` to check the generated metadata.
 
 ## Rebuild
 

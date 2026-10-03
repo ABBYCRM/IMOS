@@ -1,10 +1,30 @@
 import { createServer } from 'node:http';
-import { createReadStream } from 'node:fs';
+import { createReadStream, readFileSync } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import path from 'node:path';
+import { llmsFullTxt, llmsTxt, loadLlmsFull, notFoundPage, pages, renderHtml, robotsTxt, siteUrl, sitemapXml } from './seo.mjs';
 
 const root = path.resolve(process.env.STATIC_ROOT || path.join(import.meta.dirname, 'public'));
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+const base = siteUrl();
+
+// Pre-render one HTML document per route so crawlers get unique metadata without running JS.
+const template = readFileSync(path.join(root, 'index.html'), 'utf8');
+const html = new Map(pages.map((p) => [p.path, renderHtml(template, base, p)]));
+const notFoundHtml = renderHtml(template, base, notFoundPage);
+const text = new Map([
+  ['/robots.txt', ['text/plain; charset=utf-8', robotsTxt(base)]],
+  ['/sitemap.xml', ['application/xml; charset=utf-8', sitemapXml(base)]],
+  ['/llms.txt', ['text/plain; charset=utf-8', llmsTxt(base)]],
+  ['/llms-full.txt', ['text/plain; charset=utf-8', llmsFullTxt(loadLlmsFull(import.meta.dirname), base)]],
+]);
+const redirects = new Map([['/index.html', '/'], ...pages.filter((p) => p.path !== '/').map((p) => [`${p.path}.html`, p.path])]);
+
+function send(req, res, status, type, body, cache = 'no-cache') {
+  const buf = Buffer.from(body);
+  res.writeHead(status, { 'Content-Type': type, 'Content-Length': buf.length, 'Cache-Control': cache });
+  res.end(req.method === 'HEAD' ? undefined : buf);
+}
+const types = { '.xml': 'application/xml; charset=utf-8', '.ico': 'image/x-icon', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.jpg': 'image/jpeg', '.png': 'image/png',
   '.svg': 'image/svg+xml', '.mp4': 'video/mp4', '.webm': 'video/webm',
   '.pdf': 'application/pdf', '.txt': 'text/plain; charset=utf-8', '.woff2': 'font/woff2' };
@@ -15,9 +35,20 @@ const server = createServer(async (req, res) => {
   if (!['GET', 'HEAD'].includes(req.method)) {
     res.writeHead(405, { Allow: 'GET, HEAD' }).end(); return;
   }
-  let pathname;
-  try { pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname); }
-  catch { res.writeHead(400).end(); return; }
+  let pathname, rawPath, query;
+  try {
+    const u = new URL('http://localhost' + (req.url.startsWith('/') ? req.url : '/' + req.url));
+    rawPath = u.pathname; query = u.search;
+    pathname = decodeURIComponent(rawPath);
+  } catch { res.writeHead(400).end(); return; }
+  if (pathname.length > 1 && pathname.endsWith('/')) {
+    // Same-origin only: collapse leading slashes so "//host/" cannot become an open redirect.
+    const target = '/' + rawPath.replace(/^\/+/, '').replace(/\/+$/, '');
+    res.writeHead(301, { Location: target + query }).end(); return;
+  }
+  if (redirects.has(pathname)) { res.writeHead(301, { Location: redirects.get(pathname) + query }).end(); return; }
+  if (html.has(pathname)) { send(req, res, 200, 'text/html; charset=utf-8', html.get(pathname)); return; }
+  if (text.has(pathname)) { const [type, body] = text.get(pathname); send(req, res, 200, type, body, 'public, max-age=3600'); return; }
   let file = path.resolve(root, `.${pathname}`);
   if (pathname.includes('\0') || (file !== root && !file.startsWith(root + path.sep))) {
     res.writeHead(400).end(); return;
@@ -25,11 +56,10 @@ const server = createServer(async (req, res) => {
   let info;
   try { info = await stat(file); } catch { /* SPA routes are handled below. */ }
   if (info?.isDirectory()) { file = path.join(file, 'index.html'); info = await stat(file).catch(() => null); }
-  if (!info?.isFile()) {
-    if (path.extname(pathname)) { res.writeHead(404).end('Not found'); return; }
-    file = path.join(root, 'index.html');
-    info = await stat(file).catch(() => null);
-    if (!info) { res.writeHead(503).end('Site build unavailable'); return; }
+  if (!info?.isFile() || path.basename(file) === 'index.html') {
+    if (path.extname(pathname) && path.extname(pathname) !== '.html') { send(req, res, 404, 'text/plain; charset=utf-8', 'Not found'); return; }
+    // Unknown routes still render the SPA (which shows its not-found view) but return a real 404.
+    send(req, res, 404, 'text/html; charset=utf-8', notFoundHtml); return;
   }
   const ext = path.extname(file);
   res.setHeader('Content-Type', types[ext] || 'application/octet-stream');
