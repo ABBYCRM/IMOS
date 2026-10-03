@@ -61,3 +61,11 @@ The editable redesign remains in the Replit workspace at `artifacts/imos`.
 Build using `PORT=24960 BASE_PATH=/ NODE_ENV=production pnpm --filter @workspace/imos run build`.
 Copy `artifacts/imos/dist/public` into `imos-release/public`, excluding the unused
 legacy `media/hero.mp4`. Keep this server and the release Dockerfile.
+## HD media (2026-10-03)
+
+Content photos are served as `<picture>` (AVIF, WebP, JPG fallback) with `srcset` 640-3840 from
+`public/media/hd/`, and `sizes` matching each object-fit:cover box. Because the redesign source is not in
+this repo, `scripts/patch-hd-bundle.py` patches the prebuilt bundle (new hashed asset names) and adds an
+inline per-route hero preload to `index.html`. Rebuild the images with
+`python3 scripts/build-hd-media.py <dir-of-originals>`. Credits: `public/media/credits.txt`.
+`server.mjs` only gained `image/avif` and `image/webp` content types.
