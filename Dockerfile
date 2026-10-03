@@ -1,11 +1,9 @@
-FROM node:22-bookworm-slim
+FROM node:24-alpine
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
-COPY . .
-ENV NITRO_PRESET=node-server
-ENV HOST=0.0.0.0
+COPY --chown=node:node imos-release/server.mjs imos-release/seo.mjs imos-release/site.mjs imos-release/llms-full.md ./
+COPY --chown=node:node imos-release/public ./public
+ENV NODE_ENV=production
 ENV PORT=8080
-RUN npm run build
+USER node
 EXPOSE 8080
-CMD ["node", ".output/server/index.mjs"]
+CMD ["node", "server.mjs"]
